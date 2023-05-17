@@ -7,7 +7,6 @@ module.exports = {
     database: "fp_3_development",
     host: "127.0.0.1",
     dialect: "postgres",
-    port: 5000,
   },
   test: {
     username: process.env.DB_USERNAME,

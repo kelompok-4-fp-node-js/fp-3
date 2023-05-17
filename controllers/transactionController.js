@@ -42,6 +42,10 @@ module.exports = class {
   static async getUserAdmin(req, res) {
     try {
       // todo:  IDR format
+      if (req.userLogin.role !== "admin") {
+        res.status(403).json({ message: "You're prohibited to access this data" });
+        return;
+      }
       const result = await TransactionHistory.findAll({
         attributes: { exclude: ["id"] },
         include: [
@@ -63,6 +67,10 @@ module.exports = class {
   static async getById(req, res) {
     try {
       // todo: IDR format
+      // if (req.userLogin.role !== "admin") {
+      //   res.status(403).json({ message: "You're prohibited to access this data" });
+      //   return;
+      // }
       const { transactionId } = req.params;
       const result = await TransactionHistory.findOne({
         where: { id: transactionId },
@@ -72,7 +80,10 @@ module.exports = class {
           attributes: { exclude: ["createdAt", "updatedAt"] },
         },
       });
-      if (!result) {
+      if (req.userLogin.id !== result.UserId || req.userLogin.role !== "admin") {
+        res.status(403).json({ message: "You're prohibited to access this data" });
+        return;
+      } else if (!result) {
         res.status(404).json({ message: "data with id " + transactionId + " not found" });
         return;
       }

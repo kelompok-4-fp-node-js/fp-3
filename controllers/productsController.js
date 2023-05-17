@@ -3,10 +3,15 @@ module.exports = class {
   static async post(req, res) {
     try {
       //       const CategoryId = req.body.CategoryId;
+      if (req.userLogin.role === "customer") {
+        res.status(403).json({ message: "You're prohibited to access this data" });
+        return;
+      }
       const result = await Product.create(req.body);
-      console.log(result);
+      // console.log(result);
+      // console.log(req.userLogin);
       res.status(201).json(result);
-      //       res.send("ok");
+      // res.send("ok");
     } catch (error) {
       res.status(500).json(error);
     }
@@ -23,6 +28,10 @@ module.exports = class {
   }
   static async put(req, res) {
     try {
+      if (req.userLogin.role !== "admin") {
+        res.status(403).json({ message: "You're prohibited to access this data" });
+        return;
+      }
       const { productId } = req.params;
       //       const price = req.body.price;
       //       const stock = req.body.stock;
@@ -43,6 +52,10 @@ module.exports = class {
   }
   static async patch(req, res) {
     try {
+      if (req.userLogin.role !== "admin") {
+        res.status(403).json({ message: "You're prohibited to access this data" });
+        return;
+      }
       const { productId } = req.params;
       const CategoryId = req.body.CategoryId;
       const patchTarget = await Product.findByPk(productId);
@@ -65,6 +78,10 @@ module.exports = class {
   }
   static async delete(req, res) {
     try {
+      if (req.userLogin.role !== "admin") {
+        res.status(403).json({ message: "You're prohibited to access this data" });
+        return;
+      }
       const { productId } = req.params;
 
       const deleteTarget = await Product.findByPk(productId);
