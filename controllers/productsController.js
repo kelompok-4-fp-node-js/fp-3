@@ -1,4 +1,3 @@
-//todo: destructure input model
 const { Product } = require("../models");
 module.exports = class {
   static async post(req, res) {
@@ -15,8 +14,9 @@ module.exports = class {
   static async get(req, res) {
     try {
       const result = await Product.findAll();
-      console.log(result);
+      // console.log(result);
       res.status(201).json({ products: result });
+      // res.send("y");
     } catch (error) {
       res.status(500).json(error);
     }

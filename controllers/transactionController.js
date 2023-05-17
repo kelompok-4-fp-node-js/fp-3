@@ -1,5 +1,5 @@
 //todo: destructure input model
-const { Product, TransactionHistory } = require("../models");
+const { Product, TransactionHistory, User } = require("../models");
 module.exports = class {
   static async post(req, res) {
     try {
@@ -26,8 +26,14 @@ module.exports = class {
   }
   static async getUserCustomer(req, res) {
     try {
-      // todo: exclude transaction id, include product, total price IDR format
-      const result = await TransactionHistory.findAll();
+      // todo: total price IDR format
+      const result = await TransactionHistory.findAll({
+        attributes: { exclude: ["id"] },
+        include: {
+          model: Product,
+          attributes: { exclude: ["createdAt", "updatedAt"] },
+        },
+      });
       res.status(200).json({ transactionHistories: result });
     } catch (error) {
       res.status(500).json(error);
@@ -35,8 +41,20 @@ module.exports = class {
   }
   static async getUserAdmin(req, res) {
     try {
-      // todo: exclude transaction id, include product dan user, total price IDR format
-      const result = await TransactionHistory.findAll();
+      // todo:  IDR format
+      const result = await TransactionHistory.findAll({
+        attributes: { exclude: ["id"] },
+        include: [
+          {
+            model: Product,
+            attributes: { exclude: ["createdAt", "updatedAt"] },
+          },
+          {
+            model: User,
+            attributes: { exclude: ["password", "full_name", "createdAt", "updatedAt"] },
+          },
+        ],
+      });
       res.status(200).json({ transactionHistories: result });
     } catch (error) {
       res.status(500).json(error);
@@ -44,14 +62,21 @@ module.exports = class {
   }
   static async getById(req, res) {
     try {
-      // todo: exclude transaction id, include product, total price IDR format
+      // todo: IDR format
       const { transactionId } = req.params;
-      const result = await TransactionHistory.findOne({ where: { id: transactionId } });
+      const result = await TransactionHistory.findOne({
+        where: { id: transactionId },
+        attributes: { exclude: ["id"] },
+        include: {
+          model: Product,
+          attributes: { exclude: ["createdAt", "updatedAt"] },
+        },
+      });
       if (!result) {
         res.status(404).json({ message: "data with id " + transactionId + " not found" });
         return;
       }
-      res.status(200).json({ transactionHistories: result });
+      res.status(200).json(result);
     } catch (error) {
       res.status(500).json(error);
     }
