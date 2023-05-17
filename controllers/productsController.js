@@ -8,9 +8,16 @@ module.exports = class {
         return;
       }
       const result = await Product.create(req.body);
-      // console.log(result);
-      // console.log(req.userLogin);
-      res.status(201).json(result);
+      console.log(result.dataValues.price, "ini result post");
+
+      // console.log(product.dataValues.price);
+      // console.log("=======");
+      const Price = result.dataValues.price.toLocaleString("en-ID", { style: "currency", currency: "IDR" });
+      const formatProductt = { ...result.dataValues };
+      formatProductt.price = Price;
+      const formatProduct = { ...formatProductt };
+
+      return res.status(201).json({ products: formatProduct });
       // res.send("ok");
     } catch (error) {
       res.status(500).json(error);
@@ -19,8 +26,27 @@ module.exports = class {
   static async get(req, res) {
     try {
       const result = await Product.findAll();
-      // console.log(result);
-      res.status(201).json({ products: result });
+      console.log(result);
+      console.log("================================================");
+      const formatProduct = result.map((product) => {
+        // console.log(product.dataValues.price);
+        // console.log("=======");
+        const Price = product.dataValues.price.toLocaleString("en-ID", { style: "currency", currency: "IDR" });
+        const formatProductt = { ...product.dataValues };
+        formatProductt.price = Price;
+        const formatProduct = { ...formatProductt };
+        return formatProduct;
+      });
+      // const formatProduct = result.map(({ price, ...product }) => {
+      //   // console.log(product.dataValues.price);
+      //   // console.log("=======");
+      //   const formatPrice = price.toLocaleString("en-ID", { style: "currency", currency: "IDR" });
+      //   const formatProduct = { ...product.dataValues, formatPrice };
+      //   return formatProduct;
+      //   // console.log(price);
+      // });
+      console.log(formatProduct);
+      res.status(201).json({ products: formatProduct });
       // res.send("y");
     } catch (error) {
       res.status(500).json(error);
@@ -44,8 +70,12 @@ module.exports = class {
       }
       //       const updateProduct = await updateTarget.update({ price, stock, title });
       const updateProduct = await updateTarget.update(req.body);
-      console.log(updateProduct);
-      res.status(200).json({ product: updateProduct });
+      // console.log(updateProduct);
+      const Price = updateProduct.dataValues.price.toLocaleString("en-ID", { style: "currency", currency: "IDR" });
+      const formatProductt = { ...updateProduct.dataValues };
+      formatProductt.price = Price;
+      const formatProduct = { ...formatProductt };
+      res.status(200).json({ product: formatProduct });
     } catch (error) {
       res.status(500).json(error);
     }
@@ -70,7 +100,12 @@ module.exports = class {
       // partchTarget.CategoryId=CategoryId
       //await user.save()
       //       console.log(updateProduct);
-      res.status(200).json({ product: updateProduct });
+      const Price = updateProduct.dataValues.price.toLocaleString("en-ID", { style: "currency", currency: "IDR" });
+      const formatProductt = { ...updateProduct.dataValues };
+      formatProductt.price = Price;
+      const formatProduct = { ...formatProductt };
+      res.status(200).json({ product: formatProduct });
+      // res.status(200).json({ product: updateProduct });
       //       res.send("y");
     } catch (error) {
       res.status(500).json(error);
