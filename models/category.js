@@ -10,15 +10,38 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Category.hasMany(models.Product, { foreignKey: 'CategoryId' });
     }
   }
   Category.init({
-    type: DataTypes.STRING,
-    sold_product_amount: DataTypes.INTEGER
+    type: {
+      type: DataTypes.STRING,
+      unique: {
+        args: true,
+        msg: 'Type address already in use!'
+      },
+      allowNull: {
+        args: false,
+        msg: "Type cannot be null"
+      }
+    },
+    sold_product_amount: {
+      type: DataTypes.INTEGER,
+      allowNull: {
+        args: false,
+        msg: "Product amount cannot be null"
+      },
+      validate: {
+        isInt: {
+          args: true,
+          msg: "Product amount must be an integer"
+        }}
+      },
   }, {
     sequelize,
     modelName: 'Category',
+    freezeTableName: true
+
   });
   return Category;
 };

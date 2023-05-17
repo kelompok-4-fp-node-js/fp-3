@@ -1,5 +1,5 @@
 const jwt = require("../helpers/jwt");
-const { user } = require("../models");
+const { User } = require("../models");
 
 module.exports = async (req, res, next) => {
   try {
@@ -7,10 +7,10 @@ module.exports = async (req, res, next) => {
     if (!payload) {
       res.status(404).send({ message: "user not found payload" });
     }
-
-        const userData = await user.findOne({
-            where: { username: payload.username, password: payload.password },
+        const userData = await User.findOne({
+            where: { email: payload.email, password: payload.password },
         })
+
         if (!userData) {
             res.status(404).send({ message: 'user not found' })
         }
