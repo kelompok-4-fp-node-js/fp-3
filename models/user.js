@@ -111,7 +111,6 @@ module.exports = (sequelize, DataTypes) => {
   User.beforeCreate((user, options) => {
     const hashedPassword = bcrypt.hashPassword(user.password)
     user.password = hashedPassword
-    user.role = 'customer';
     user.balance = '0';
   })
 

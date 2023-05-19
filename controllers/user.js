@@ -6,13 +6,7 @@ module.exports = class {
     static async register(req, res){
         try {
 
-            const newUser = await User.create(req.body)
-
-            // const userCredentials = newUser.toJSON({
-            //     exclude: ['password', 'createdAt', 'updatedAt']
-            //   });
-              
-            // console.log(userCredentials);
+            const newUser = await User.create({...req.body,role : 'customer'})
             const secure = JSON.parse(JSON.stringify(newUser));
             delete secure.password;
             delete secure.updatedAt;
@@ -105,8 +99,6 @@ module.exports = class {
         }
 
         const newBalance = findUser.dataValues.balance + parseInt(req.body.balance)
-        // console.log(parseInt(req.body.balance));
-        // console.log(findUser.dataValues.balance);
         const updateBalance = await User.update({balance : newBalance},{where: {id: req.userLogin.id},returning: true})
         
         const formattedNumber = newBalance.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })
