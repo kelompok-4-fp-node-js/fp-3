@@ -101,7 +101,7 @@ module.exports = class {
         const newBalance = findUser.dataValues.balance + parseInt(req.body.balance)
         const updateBalance = await User.update({balance : newBalance},{where: {id: req.userLogin.id},returning: true})
         
-        const formattedNumber = newBalance.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })
+        const formattedNumber = newBalance.toLocaleString('en-ID', { style: 'currency', currency: 'IDR' })
         res.status(200).json({message : `Your balance has been successfuly updated to ${formattedNumber}`})
 
     } catch (error) {

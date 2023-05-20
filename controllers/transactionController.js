@@ -125,6 +125,10 @@ module.exports = class {
       //   return;
       // }
       const { transactionId } = req.params;
+      // const findTransactions =  await TransactionHistory.findOne({where: { id: transactionId }})
+
+
+
       const result = await TransactionHistory.findOne({
         where: { id: transactionId },
         attributes: { exclude: ["id"] },
@@ -133,13 +137,19 @@ module.exports = class {
           attributes: { exclude: ["createdAt", "updatedAt"] },
         },
       });
-      if (req.userLogin.id !== result.UserId || req.userLogin.role !== "admin") {
-        res.status(403).json({ message: "You're prohibited to access this data" });
-        return;
-      } else if (!result) {
+
+      if (!result) {
         res.status(404).json({ message: "data with id " + transactionId + " not found" });
         return;
       }
+
+      
+      if (req.userLogin.id !== result.UserId && req.userLogin.role !== "admin") {
+        res.status(403).json({ message: "You're prohibited to access this data" });
+        return;
+      } 
+      console.log('=========');
+
       // IDR format
       const final_total_price = result.dataValues.total_price.toLocaleString("en-ID", { style: "currency", currency: "IDR" });
       const product_final_price = result.dataValues.Product.price.toLocaleString("en-ID", { style: "currency", currency: "IDR" });
