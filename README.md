@@ -7,6 +7,11 @@ Muzammil Husaeri
 Kharis Rahmat
 ```
 
+### Deployed API
+```
+https://fp-3-production-0805.up.railway.app/
+```
+
 ### npm command
 ```
 npm i
